@@ -3,6 +3,8 @@
  */
 package twitter;
 
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +26,22 @@ public class Extract {
      *         every tweet in the list.
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        //throw new RuntimeException("not implemented");
+    	
+    	Instant start = tweets.get(0).getTimestamp();
+    	Instant end = start;
+    	
+    	for (Tweet x:tweets) {
+    		if (x.getTimestamp().isBefore(start)) {
+    			start=x.getTimestamp();
+    		}
+    		if (x.getTimestamp().isAfter(end)) {
+    			end=x.getTimestamp();
+    		}
+    	}
+    	
+    	return new Timespan(start,end);
+    	
     }
 
     /**
@@ -43,7 +60,30 @@ public class Extract {
      *         include a username at most once.
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+        //throw new RuntimeException("not implemented");
+    	Set<String> set = new HashSet<String>();
+    	for (Tweet tweet:tweets) {
+    		String[] text = tweet.getText().split(" ");
+    		for (String word:text) {
+    			if (word.charAt(0)=='@') {
+    				if (validUsername(word)) {
+    					set.add(word);    					
+    				}
+    				    				
+    			}
+    		}
+    	}
+       return set; 
     }
-
+    
+    public static boolean validUsername(String uname) {
+    	for (int index=1;index < uname.length();index++) {
+    		
+    		if (!Character.isLetterOrDigit(uname.charAt(index)) && !(uname.charAt(index)=='-') && !(uname.charAt(index)=='_')) {
+        		return false;
+        	}    		
+    	}
+    	return true;
+    	
+    }
 }

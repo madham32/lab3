@@ -20,7 +20,8 @@ public class ExtractTest {
      * See the ic03-testing exercise for examples of what a testing strategy comment looks like.
      * Make sure you have partitions.
      */
-    public HashSet<String> a = new HashSet<String>();
+	private static final Set<String> a = new HashSet<String>();
+	
     private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
     private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
     private static final Instant d3 = Instant.parse("2016-02-17T10:05:00Z");
@@ -35,8 +36,8 @@ public class ExtractTest {
     private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "rivest talk in 30 minutes #hype", d2);
     private static final Tweet tweet3 = new Tweet(3, "taimur", "going to rivest with @madham", d3);
     private static final Tweet tweet4 = new Tweet(4, "hammad", "email on hammir@gmail.com for quieries", d4);
-    private static final Tweet tweet5 = new Tweet(5, "waleed", "party scenes here with @obaj988 @Maham @madham", d5);
-    private static final Tweet tweet6 = new Tweet(6, "madham", "party scenes here with @obaj988@Maham@madham", d6);
+    private static final Tweet tweet5 = new Tweet(5, "waleed", "party scenes here with @obaj989 @Maham @madham", d5);
+    private static final Tweet tweet6 = new Tweet(6, "madham", "party scenes here with @obaj989@Maham@madham", d6);
     
      
    
@@ -54,6 +55,7 @@ public class ExtractTest {
         assertEquals("expected end", d2, timespan.getEnd());
     }
     
+    @Test
     public void test2GetTimespanTwoTweets() {
         Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1, tweet2, tweet3, tweet4));
         
@@ -61,6 +63,7 @@ public class ExtractTest {
         assertEquals("expected end", d4, timespan.getEnd());
     }
     
+    @Test
     public void test3GetTimespanTwoTweets() {
         Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1, tweet2, tweet3, tweet4, tweet5, tweet6));
         
@@ -75,18 +78,59 @@ public class ExtractTest {
         assertTrue("expected empty set", mentionedUsers.isEmpty());
     }
     
+    @Test
     public void test1GetMentionedUsersNoMention() {
-        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1, tweet2, tweet3));
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1, tweet2, tweet4));
         
         assertTrue("expected empty set", mentionedUsers.isEmpty());
     }
-    
+  
+    @Test
     public void test2GetMentionedUsersNoMention() {
         Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet3));
-        
-        assertEquals("expected output",,mentionedUsers.isEmpty());
+        Set<String> expectedOutput = new HashSet<String>();
+    	expectedOutput.add("@madham");
+    	
+        assertEquals("expected output",expectedOutput,mentionedUsers);
     }
     
+    @Test
+    public void test3GetMentionedUsersNoMention() {
+        Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1, tweet2, tweet4, tweet5, tweet6, tweet3));
+        Set<String> expectedOutput = new HashSet<String>();
+        expectedOutput.add("@obaj989");
+    	expectedOutput.add("@madham");
+    	expectedOutput.add("@Maham");
+    	
+        assertEquals("expected output",expectedOutput,mentionedUsers);
+    }
+//    @Test
+//    public void testGetMentionedUsers() {
+//        
+//    	Set<String> expectedOutput = new HashSet<String>();
+//    	expectedOutput.add("@hamna");
+//    	expectedOutput.add("@maria");
+//    	expectedOutput.add("@noor");
+//    	expectedOutput.add("@hype");
+//    	
+//    	//tweet3 = "rivest talk in 30 minutes @hype"
+//    	//tweet4 = "#he@llo @HAMNA @noor @maria @mit.edu"
+//    	
+//    	/*
+//    	 * As Twitter u
+//    	 * sernames are case-insensitive, and the returned set
+//    	 * includes a username at most once.
+//    	 * 
+//    	 * an email address like bitdiddle@mit.edu does NOT 
+//    	 * contain a mention of the username mit. 
+//    	 * As username-mention cannot be immediately preceded or followed by any
+//    	 * character valid in a Twitter username.
+//    	 */
+//    	Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet3, tweet4));
+//        System.out.println(mentionedUsers);
+//        System.out.println(expectedOutput);
+//        assertEquals(expectedOutput, mentionedUsers);
+//    }
     
     
     /*
