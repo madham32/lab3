@@ -3,9 +3,17 @@
  */
 package twitter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.swing.text.html.HTMLDocument.Iterator;
 
 /**
  * SocialNetwork provides methods that operate on a social network.
@@ -54,7 +62,46 @@ public class SocialNetwork {
      *         descending order of follower count.
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-        throw new RuntimeException("not implemented");
+        //throw new RuntimeException("not implemented");
+    	
+    	List influencers = new ArrayList<String>();
+    	HashMap<String, Integer> influencer = new HashMap<String, Integer>();
+    	
+    	for (String key:followsGraph.keySet()) {
+    		influencer.put(key,followsGraph.get(key).size());    		
+    	}
+    	
+    	Map<String, Integer> hm1 = sortByValue(influencer);
+    	
+    	for (String key:hm1.keySet()) {
+    		influencers.add(followsGraph.get(key));    		
+    	}
+    	
+    	return influencers;
+
+    }
+    
+    public static HashMap<String, Integer> sortByValue(HashMap<String, Integer> hm) 
+    { 
+        // Create a list from elements of HashMap 
+        List<Map.Entry<String, Integer> > list = 
+               new LinkedList<Map.Entry<String, Integer> >(hm.entrySet()); 
+  
+        // Sort the list 
+        Collections.sort(list, new Comparator<Map.Entry<String, Integer> >() { 
+            public int compare(Map.Entry<String, Integer> o1,  
+                               Map.Entry<String, Integer> o2) 
+            { 
+                return (o2.getValue()).compareTo(o1.getValue()); 
+            } 
+        }); 
+          
+        // put data from sorted list to hashmap  
+        HashMap<String, Integer> temp = new LinkedHashMap<String, Integer>(); 
+        for (Map.Entry<String, Integer> aa : list) { 
+            temp.put(aa.getKey(), aa.getValue()); 
+        } 
+        return temp; 
     }
 
 }

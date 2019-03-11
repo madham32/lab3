@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,7 +41,31 @@ public class SocialNetworkTest {
         
         assertTrue("expected empty list", influencers.isEmpty());
     }
-
+    
+    @Test
+    public void testInfluencers() {
+        Map<String, Set<String>> followsGraph = new HashMap<>();
+        HashSet<String> h1 = new HashSet<String>();
+        HashSet<String> h2 = new HashSet<String>();
+        HashSet<String> h3 = new HashSet<String>();
+        h1.add("@obaj");
+        h1.add("@tazhar");
+        h1.add("@zhabib");
+        h2.add("@obaj");
+        h2.add("@tazhar");
+        h3.add("@tazhar");
+        
+        followsGraph.put("@madham", h1);
+        followsGraph.put("@ymasood", h2);
+        followsGraph.put("@ubashir", h3);
+        
+        List<String> influencers = SocialNetwork.influencers(followsGraph);
+        
+        assertEquals(influencers.get(0), h1);
+        assertEquals(influencers.get(2), h3);
+        
+    }
+    
     /*
      * Warning: all the tests you write here must be runnable against any
      * SocialNetwork class that follows the spec. It will be run against several
