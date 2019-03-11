@@ -4,6 +4,7 @@
 package twitter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -48,9 +49,28 @@ public class SocialNetwork {
      *         All the Twitter usernames in the returned social network must be
      *         either authors or @-mentions in the list of tweets.
      */
-    public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
-    }
+	 public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
+	        
+	        Map<String, Set<String>> followGraph = new HashMap<String, Set<String>>();
+	        
+	        for (Tweet tweet: tweets) {
+	           if(followGraph.containsKey(tweet.getAuthor())) {
+	               Set<String> set = Extract.getMentionedUsers(Arrays.asList(tweet));
+	               Set<String> preset = followGraph.get(tweet.getAuthor());
+	               for (String c: set) {
+	                   preset.add(c);
+	               }
+	               followGraph.put(tweet.getAuthor(), preset);
+	               
+	           }else {
+	               Set<String> set = Extract.getMentionedUsers(Arrays.asList(tweet));
+	               followGraph.put(tweet.getAuthor(), set);
+	           }
+
+	        }
+	        
+	        return followGraph;
+	    }
 
     /**
      * Find the people in a social network who have the greatest influence, in
@@ -103,5 +123,7 @@ public class SocialNetwork {
         } 
         return temp; 
     }
+    
+    
 
 }

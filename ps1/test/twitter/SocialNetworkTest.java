@@ -5,7 +5,9 @@ package twitter;
 
 import static org.junit.Assert.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +24,11 @@ public class SocialNetworkTest {
      * Make sure you have partitions.
      */
     
+	private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
+    private static final Tweet tweet1 = new Tweet(4, "waleed", "@HAMNA @noor @maria @mit.edu", d1);
+    private static final Tweet tweet2 = new Tweet(4, "hamza", "@bushra @yusra", d1);
+    private static final Tweet tweet3 = new Tweet(4, "zaeem", "@poki ", d1);
+	
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
         assert false; // make sure assertions are enabled with VM argument: -ea
@@ -64,6 +71,36 @@ public class SocialNetworkTest {
         assertEquals(influencers.get(0), h1);
         assertEquals(influencers.get(2), h3);
         
+    }
+    
+    @Test
+    public void testGuessFollowsGraphOne() {
+        ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+        tweets.add(tweet1);
+//        tweets.add(tweet2);
+//        tweets.add(tweet3);
+        
+        Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(tweets);
+        Set<String> set = new HashSet<String>();
+        set.add("@HAMNA");
+        set.add("@maria");
+        set.add("@noor");
+        
+        assertEquals(followsGraph.get("waleed"), set);
+    }
+    
+    @Test
+    public void testGuessFollowsGraphMultiple() {
+        ArrayList<Tweet> tweets = new ArrayList<Tweet>();
+        tweets.add(tweet1);
+        tweets.add(tweet2);
+        tweets.add(tweet3);
+        
+        Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(tweets);
+        Set<String> set = new HashSet<String>();
+        set.add("@poki");
+        
+        assertEquals(followsGraph.get("zaeem"), set);
     }
     
     /*
